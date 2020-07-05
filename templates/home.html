@@ -2,11 +2,11 @@
 
 {% block title %}Home{% endblock title %}
 {% block content %}
-<p class="subtitle">
-{% if user.is_authenticated %}
-    You are logged in as <strong>{{ user }}</strong>.
-{% else %}
-    You are not logged in.
-{% endif %}
-</p>
+    <p class="subtitle">
+        {% if user.is_authenticated %}
+            You are logged in as <strong>{{ user }}</strong>.
+        {% else %}
+            You are not logged in.
+        {% endif %}
+    </p>
 {% endblock content %}
