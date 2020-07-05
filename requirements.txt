@@ -1,0 +1,6 @@
+Django
+psycopg2-binary
+django-debug-toolbar
+django-crispy-forms
+gunicorn
+pillow
