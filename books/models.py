@@ -31,3 +31,7 @@ class Book(models.Model):
 
     def __str__(self):
         return f'<Book: "{self.title}">'
+
+    @property
+    def author_str(self):
+        return ', '.join(author.full_name for author in self.authors.all())
