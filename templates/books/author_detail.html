@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ author.full_name }}{% endblock title %}
+{% block content %}
+    <a href="{% url 'authors' %}">
+        <button type="button" class="btn btn-primary btn-sm mb-2">All Authors</button>
+    </a>
+    <h2>{{ author.full_name }}</h2>
+    <p>TODO add short bio</p>
+    <p>Books by this author</p>
+    <ul>
+        {% for book in author.books.all %}
+            <li><a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}

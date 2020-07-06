@@ -2,7 +2,7 @@ import datetime as dt
 
 from django.views.generic import TemplateView, ListView, DetailView
 
-from .models import Book
+from .models import Book, Author
 
 
 class HomepageView(TemplateView):
@@ -23,4 +23,14 @@ class BookListView(ListView):
 class BookDetailView(DetailView):
     model = Book
     template_name = 'books/book_detail.html'
-    context_object_name = 'book'
+
+
+class AuthorListView(ListView):
+    model = Author
+    template_name = 'books/authors_list.html'
+    context_object_name = 'authors'
+
+
+class AuthorDetailView(DetailView):
+    model = Author
+    template_name = 'books/author_detail.html'

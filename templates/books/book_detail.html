@@ -1,18 +1,18 @@
 {% extends '_base.html' %}
 
-{% block title %}AllBooks{% endblock title %}
+{% block title %}{{ book.title }}{% endblock title %}
 {% block content %}
     <a href="{% url 'books' %}"><button type="button" class="btn btn-primary btn-sm mb-2">All Books</button></a>
     <h2>{{ book.title }}</h2>
     {% if book.authors.all|length == 1 %}
-        <h5 class="text-muted">{{ book.authors.all.0.full_name }}</h5>
+        <h5 class="text-muted"><a href="{% url 'author_detail' book.authors.all.0.pk %}">{{ book.authors.all.0.full_name }}</a></h5>
     {% else %}
         <h5 class="text-muted">
             {% for author in book.authors.all %}
                 {% if forloop.last %}
-                    {{ author.full_name }}
+                    <a href="{% url 'author_detail' author.pk %}">{{ author.full_name }}</a>
                 {% else %}
-                    {{ author.full_name }},
+                    <a href="{% url 'author_detail' author.pk %}">{{ author.full_name }},</a>
                 {% endif %}
             {% endfor %}
         </h5>
