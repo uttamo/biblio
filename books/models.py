@@ -1,12 +1,16 @@
 from uuid import uuid4
 
 from django.db import models
+from django.urls import reverse_lazy
 
 
 class Author(models.Model):
     first_name = models.CharField(max_length=128, blank=False)
     middle_name = models.CharField(max_length=128, blank=True)
     last_name = models.CharField(max_length=128, blank=True)
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
     def __str__(self):
         return f'<Author: "{self.full_name}">'
@@ -19,6 +23,9 @@ class Author(models.Model):
         if self.last_name:
             name += f' {self.last_name}'
         return name
+
+    def get_absolute_url(self):
+        return reverse_lazy('author_detail', args=[str(self.pk)])
 
 
 class Book(models.Model):
@@ -35,3 +42,6 @@ class Book(models.Model):
     @property
     def author_str(self):
         return ', '.join(author.full_name for author in self.authors.all())
+
+    def get_absolute_url(self):
+        return reverse_lazy('book_detail', args=[str(self.pk)])
