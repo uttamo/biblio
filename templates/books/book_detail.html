@@ -1,9 +1,12 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %}{{ book.title }}{% endblock title %}
 {% block content %}
     <a href="{% url 'books' %}"><button type="button" class="btn btn-primary btn-sm mb-2">All Books</button></a>
+    <!-- Title -->
     <h2>{{ book.title }}</h2>
+    <!-- Author -->
     {% if book.authors.all|length == 1 %}
         <h5 class="text-muted"><a href="{% url 'author_detail' book.authors.all.0.pk %}">{{ book.authors.all.0.full_name }}</a></h5>
     {% else %}
@@ -16,6 +19,12 @@
                 {% endif %}
             {% endfor %}
         </h5>
+    {% endif %}
+    <!-- Cover -->
+    {% if book.cover %}
+        <img class="bookcover" src="{{ book.cover.url }}" alt="{{ book.title }} cover" style="max-height: 300px">
+    {% else %}
+        <img class="bookcover" src="{% static "books/placeholder_cover.png" %}" alt="Placeholder cover" style="max-height: 300px">
     {% endif %}
     <p class="mt-3"><strong>Published</strong><br>{{ book.date_published }}</p>
     <p class="mt-3"><strong>Description</strong><br>{{ book.description }}</p>

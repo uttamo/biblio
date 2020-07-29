@@ -1,11 +1,41 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %}All Books{% endblock title %}
 {% block content %}
     <h1>All Books</h1>
     <ul class="list-group">
         {% for book in books %}
-            <li class="list-group-item"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a> <span class="text-muted"><em>{{ book.author_str }} ({{ book.date_published|date:"Y" }})</em></span></li>
+            <li class="list-group-item">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-6 pr-3" style="min-width: 100px">
+                            {% if book.cover %}
+                                <a href="{{ book.get_absolute_url }}"><img class="bookcover" src="{{ book.cover.url }}" alt="{{ book.title }} cover" style="max-height: 100px"></a>
+                            {% else %}
+                                <a href="{{ book.get_absolute_url }}"><img class="bookcover" src="{% static "books/placeholder_cover.png" %}" alt="Placeholder cover" style="max-height: 100px"></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-6">
+                            <h5 class="mb-1"><a href="{{ book.get_absolute_url }}">{{ book.title_short }}</a></h5>
+                            <p class="text-muted"><em>
+                                {% if book.authors.all|length == 1 %}
+                                    <a href="{% url 'author_detail' book.authors.all.0.pk %}">{{ book.authors.all.0.full_name }}</a>
+                                {% else %}
+                                        {% for author in book.authors.all %}
+                                            {% if forloop.last %}
+                                                <a href="{% url 'author_detail' author.pk %}">{{ author.full_name }}</a>
+                                            {% else %}
+                                                <a href="{% url 'author_detail' author.pk %}">{{ author.full_name }},</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                {% endif %}
+                                ({{ book.date_published|date:"Y" }})
+                            </em></p>
+                        </div>
+                    </div>
+                </div>
+            </li>
         {% endfor %}
     </ul>
 {% endblock content %}

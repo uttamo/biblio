@@ -1,3 +1,4 @@
+from textwrap import shorten
 from uuid import uuid4
 
 from django.db import models
@@ -38,6 +39,11 @@ class Book(models.Model):
 
     def __str__(self):
         return f'<Book: "{self.title}">'
+
+    @property
+    def title_short(self):
+        """ For list page. """
+        return shorten(self.title, 70, placeholder="...")
 
     @property
     def author_str(self):
