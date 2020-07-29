@@ -6,7 +6,11 @@
         <button type="button" class="btn btn-primary btn-sm mb-2">All Authors</button>
     </a>
     <h2>{{ author.full_name }}</h2>
-    <p>TODO add short bio</p>
+    {% if author.bio %}
+        <p>{{ author.bio }}</p>
+    {% else %}
+        <p>No biography.</p>
+    {% endif %}
     <p class="mt-3"><strong>Books by this author</strong><br></p>
     <ul>
         {% for book in author.books.all %}

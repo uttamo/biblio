@@ -9,6 +9,7 @@ class Author(models.Model):
     first_name = models.CharField(max_length=128, blank=False)
     middle_name = models.CharField(max_length=128, blank=True)
     last_name = models.CharField(max_length=128, blank=True)
+    bio = models.TextField(max_length=500, blank=True)
 
     class Meta:
         ordering = ['first_name', 'last_name']

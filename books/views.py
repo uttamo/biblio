@@ -44,8 +44,14 @@ class SearchResultsView(ListView):
         context_data = super().get_context_data(**kwargs)
         query = self.request.GET.get('query')
         context_data['query'] = query
-        context_data['author_results'] = Author.objects.filter(
+
+        # Query on author name
+        author_results = Author.objects.filter(
             Q(first_name__icontains=query) | Q(middle_name__icontains=query) | Q(last_name__icontains=query))
+        # Add authors from the book results
+        for book in self.get_queryset():
+            author_results |= book.authors.all()
+        context_data['author_results'] = set(author_results)
         return context_data
 
     def get_queryset(self):
