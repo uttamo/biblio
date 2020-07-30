@@ -19,7 +19,6 @@ class BookListView(ListView):
     model = Book
     template_name = 'books/book_list.html'
     context_object_name = 'books'
-    # todo - common pagination HTML components so don't have to repeat for author list
     paginate_by = 4
 
 
