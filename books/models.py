@@ -36,7 +36,7 @@ class Book(models.Model):
     authors = models.ManyToManyField(Author, related_name='books')
     description = models.TextField(max_length=500, blank=True)
     cover = models.ImageField(upload_to='book_covers/', blank=True)  # todo - maybe generate a filename with random chars
-    date_published = models.DateField(blank=True)
+    date_published = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f'<Book: "{self.title}">'
