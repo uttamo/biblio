@@ -1,7 +1,11 @@
 from textwrap import shorten
+from typing import Iterable
 from uuid import uuid4
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.conf import settings
+from django.db.models import UniqueConstraint
 from django.urls import reverse_lazy
 
 
@@ -42,13 +46,45 @@ class Book(models.Model):
         return f'<Book: "{self.title}">'
 
     @property
-    def title_short(self):
+    def title_short(self) -> str:
         """ For list page. """
         return shorten(self.title, 70, placeholder="...")
 
     @property
-    def author_str(self):
+    def author_str(self) -> str:
         return ', '.join(author.full_name for author in self.authors.all())
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse_lazy('book_detail', args=[str(self.pk)])
+
+    def get_rating_info(self) -> dict:
+        reviews: Iterable[Review] = self.review_set.all()
+        no_of_reviews = len(reviews)
+        total = sum(r.rating for r in reviews)
+
+        if no_of_reviews == 0:
+            average_rating = None
+            star_rating_text = 'No reviews'
+        else:
+            average_rating = round(total / no_of_reviews, 1)
+            star_rating_text = '★ {}'.format(average_rating)
+
+        info = {
+            'no_of_reviews': no_of_reviews,
+            'avg_rating': average_rating,
+            'star_rating_text': star_rating_text,
+        }
+        return info
+
+
+class Review(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(blank=False, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    text = models.TextField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['user', 'book'], name='unique review per user per book')]
+
+    def __str__(self):
+        return f'<Review {self.pk} (by {self.user}) for {self.book} ({self.rating}/10)>'

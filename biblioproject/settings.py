@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -37,8 +36,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Project
     'users.apps.UsersConfig',
     'books.apps.BooksConfig',
+
+    # 3rd party
     'crispy_forms',
 ]
 
@@ -138,3 +141,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Resolve 'App not ready yet' error when trying to use IPython
+# https://stackoverflow.com/questions/48163641/django-core-exceptions-appregistrynotready-apps-arent-loaded-yet-django-2-0/48168360
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "biblioproject.settings")
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()

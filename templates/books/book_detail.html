@@ -27,6 +27,15 @@
         <img class="bookcover" src="{% static "books/placeholder_cover.png" %}" alt="Placeholder cover" style="max-height: 300px">
     {% endif %}
     <p class="mt-3"><strong>Published</strong><br>{{ book.date_published }}</p>
-    <p class="mt-3"><strong>Description</strong><br>{{ book.description }}</p>
+    <p class="mt-3"><strong>Average user rating</strong><br>
+        {% with book_rating_info=book.get_rating_info %}
+            {% if book_rating_info.no_of_reviews == 0 %}
+                No reviews
+            {% else %}
+                {{ book_rating_info.star_rating_text }} ({{ book_rating_info.no_of_reviews }} review{% if book_rating_info.no_of_reviews > 1 %}s{% endif %})
+            {% endif %}
+        {% endwith %}
+    </p>
+    <p class="mt-3"><strong>Description</strong><br>{% if book.description %}{{ book.description }}{% else %}No description.{% endif %}</p>
 
 {% endblock content %}

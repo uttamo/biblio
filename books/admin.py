@@ -1,10 +1,19 @@
 from django.contrib import admin
 
-from .models import Book, Author
+from .models import Book, Author, Review
+
+
+class ReviewAdmin(admin.ModelAdmin):
+    pass
+
+
+class ReviewInline(admin.TabularInline):
+    model = Review
 
 
 class BookAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_published'
+    inlines = [ReviewInline]
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -15,3 +24,4 @@ class AuthorAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)
+admin.site.register(Review, ReviewAdmin)

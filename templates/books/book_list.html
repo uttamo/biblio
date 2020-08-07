@@ -17,8 +17,10 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-6">
+                            <!-- Book title -->
                             <h5 class="mb-1"><a href="{{ book.get_absolute_url }}">{{ book.title_short }}</a></h5>
-                            <p class="text-muted"><em>
+                            <!-- Authors -->
+                            <p class="mb-1"><em>
                                 {% if book.authors.all|length == 1 %}
                                     <a href="{% url 'author_detail' book.authors.all.0.pk %}">{{ book.authors.all.0.full_name }}</a>
                                 {% else %}
@@ -32,6 +34,16 @@
                                 {% endif %}
                                 ({{ book.date_published|date:"Y" }})
                             </em></p>
+                            <!-- Ratings -->
+                            <p class="text-muted">
+                                {% with book_rating_info=book.get_rating_info %}
+                                    {% if book_rating_info.no_of_reviews == 0 %}
+                                        No ratings
+                                    {% else %}
+                                        {{ book_rating_info.star_rating_text }}
+                                    {% endif %}
+                                {% endwith %}
+                            </p>
                         </div>
                     </div>
                 </div>
