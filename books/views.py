@@ -1,8 +1,13 @@
 import datetime as dt
 
-from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
+from django.http import HttpResponseForbidden
+from django.urls import reverse
+from django.views import View
+from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic.detail import SingleObjectMixin
 
+from .forms import ReviewForm
 from .models import Book, Author
 
 
@@ -22,9 +27,53 @@ class BookListView(ListView):
     paginate_by = 4
 
 
-class BookDetailView(DetailView):
+class BookDetailView(View):
+    """
+    For GET, dispatch to the display view.
+    For POST, dispatch to the form POST view (form is in the detail page).
+    """
     model = Book
     template_name = 'books/book_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        view = _BookDisplay.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = _ReviewView.as_view()
+        return view(request, *args, **kwargs)
+
+
+class _BookDisplay(DetailView):
+    model = Book
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ReviewForm()
+        return context
+
+
+class _ReviewView(SingleObjectMixin, FormView):
+    template_name = 'books/book_detail.html'
+    form_class = ReviewForm
+    model = Book
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        new_review = form.save(commit=False)
+        new_review.book = self.object
+        new_review.user = self.request.user
+        new_review.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """ After successful review submission, just go back to the book's page. """
+        return reverse('book_detail', kwargs={'pk': self.object.pk})
 
 
 class AuthorListView(ListView):

@@ -143,7 +143,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Resolve 'App not ready yet' error when trying to use IPython
-# https://stackoverflow.com/questions/48163641/django-core-exceptions-appregistrynotready-apps-arent-loaded-yet-django-2-0/48168360
+# https://stackoverflow.com/a/50654136
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "biblioproject.settings")
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
