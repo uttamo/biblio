@@ -4,11 +4,11 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, DeleteView
 from django.views.generic.detail import SingleObjectMixin
 
 from .forms import ReviewForm
-from .models import Book, Author
+from .models import Book, Author, Review
 
 
 class HomepageView(TemplateView):
@@ -49,7 +49,13 @@ class _BookDisplay(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = ReviewForm()
+        book = self.get_object()
+        user_review = book.review_set.filter(Q(user=self.request.user)).first()
+        if user_review:
+            context['existing_review'] = user_review
+        else:
+            context['form'] = ReviewForm()
+
         return context
 
 
@@ -74,6 +80,14 @@ class _ReviewView(SingleObjectMixin, FormView):
     def get_success_url(self):
         """ After successful review submission, just go back to the book's page. """
         return reverse('book_detail', kwargs={'pk': self.object.pk})
+
+
+class ReviewDeleteView(DeleteView):
+    template_name = 'reviews/review_delete.html'
+    model = Review
+
+    def get_success_url(self):
+        return reverse('book_detail', kwargs={'pk': self.object.book.pk})
 
 
 class AuthorListView(ListView):

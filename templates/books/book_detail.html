@@ -38,10 +38,53 @@
         {% endwith %}
     </p>
     <p class="mt-3"><strong>Description</strong><br>{% if book.description %}{{ book.description }}{% else %}No description.{% endif %}</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-success" type="submit">Submit</button>
-    </form>
+
+    <div style="margin-top: 40px">
+        {% if form %}
+        <!-- New review form -->
+            <h5 class="display-6 mt-10">Add review<br></h5>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+        {% else %}
+        <!-- User's current review -->
+            <h5 class="display-6 mt-10">Your Review<br></h5>
+            <div class="card">
+                <div class="card-header">
+                    {{ request.user }}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Rating: {{ existing_review.rating }}/10</h5>
+                            <p class="card-text">{% if existing_review.text %}{{ existing_review.text }}{% else %}You didn't leave a review.{% endif %}</p>
+                        </div>
+                        <div>
+                            <a class="btn btn-warning btn-sm" href="#">Edit</a>
+                            <a class="btn btn-danger btn-sm" href="{% url 'review_delete' existing_review.pk %}">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- All review -->
+    <div style="margin-top: 40px">
+        <h5 class="display-6 mt-10">All reviews<br></h5>
+        {% for review in book.review_set.all %}
+            <div class="card mb-2">
+                <div class="card-header">
+                    {{ review.user }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Rating: {{ review.rating }}/10</h5>
+                    <p class="card-text">{% if review.text %}{{ review.text }}{% else %}You didn't leave a review.{% endif %}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock content %}
