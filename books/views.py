@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, DeleteView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
 from .forms import ReviewForm
@@ -50,7 +50,16 @@ class _BookDisplay(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         book = self.get_object()
-        user_review = book.review_set.filter(Q(user=self.request.user)).first()
+        all_reviews = book.review_set.all()
+        user_review = None
+        other_users_reviews = []
+        for review in all_reviews:
+            if review.user == self.request.user:
+                assert user_review is None, f'There should only be one review per user per book: {review}'
+                user_review = review
+            else:
+                other_users_reviews.append(review)
+        context['other_reviews'] = other_users_reviews
         if user_review:
             context['existing_review'] = user_review
         else:
@@ -85,6 +94,18 @@ class _ReviewView(SingleObjectMixin, FormView):
 class ReviewDeleteView(DeleteView):
     template_name = 'reviews/review_delete.html'
     model = Review
+
+    def get_success_url(self):
+        return reverse('book_detail', kwargs={'pk': self.object.book.pk})
+
+
+class ReviewEditView(UpdateView):
+    template_name = 'reviews/review_edit.html'
+    model = Review
+    fields = ['rating', 'text']
+
+    def get_form_class(self):
+        return ReviewForm
 
     def get_success_url(self):
         return reverse('book_detail', kwargs={'pk': self.object.book.pk})

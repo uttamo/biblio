@@ -33,7 +33,7 @@
             {% if book_rating_info.no_of_reviews == 0 %}
                 No reviews
             {% else %}
-                {{ book_rating_info.star_rating_text }} ({{ book_rating_info.no_of_reviews }} review{% if book_rating_info.no_of_reviews > 1 %}s{% endif %})
+                {{ book_rating_info.star_rating_text }} ({{ book_rating_info.no_of_reviews }} review{{ book_rating_info.no_of_reviews|pluralize }})
             {% endif %}
         {% endwith %}
     </p>
@@ -48,12 +48,16 @@
                 {{ form|crispy }}
                 <button class="btn btn-success" type="submit">Submit</button>
             </form>
-        {% else %}
-        <!-- User's current review -->
-            <h5 class="display-6 mt-10">Your Review<br></h5>
-            <div class="card">
-                <div class="card-header">
-                    {{ request.user }}
+        {% endif %}
+    </div>
+
+    <!-- All review -->
+    <div style="margin-top: 40px">
+        <h5 class="display-6 mt-10">{% if other_reviews|length > 0 or existing_review %}All reviews{% else %}No reviews yet.{% endif %}<br></h5>
+        {% if existing_review %}
+            <div class="card mb-2">
+                <div class="card-header bg-light">
+                   {{ existing_review.user }}<span class="badge badge-primary ml-1">You</span>
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -62,19 +66,15 @@
                             <p class="card-text">{% if existing_review.text %}{{ existing_review.text }}{% else %}You didn't leave a review.{% endif %}</p>
                         </div>
                         <div>
-                            <a class="btn btn-warning btn-sm" href="#">Edit</a>
+                            <a class="btn btn-secondary btn-sm" href="{% url 'review_edit' existing_review.pk %}">Edit</a>
                             <a class="btn btn-danger btn-sm" href="{% url 'review_delete' existing_review.pk %}">Delete</a>
                         </div>
                     </div>
                 </div>
             </div>
         {% endif %}
-    </div>
 
-    <!-- All review -->
-    <div style="margin-top: 40px">
-        <h5 class="display-6 mt-10">All reviews<br></h5>
-        {% for review in book.review_set.all %}
+        {% for review in other_reviews %}
             <div class="card mb-2">
                 <div class="card-header">
                     {{ review.user }}

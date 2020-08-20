@@ -1,9 +1,8 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.views.generic import TemplateView
 
-from books.views import HomepageView, BookListView, BookDetailView, AuthorListView, AuthorDetailView, SearchResultsView, ReviewDeleteView
-
+from books.views import HomepageView, BookListView, BookDetailView, AuthorListView, AuthorDetailView, SearchResultsView, \
+    ReviewDeleteView, ReviewEditView
 
 urlpatterns = [
     path('', HomepageView.as_view(), name='home'),
@@ -14,4 +13,5 @@ urlpatterns = [
     path('authors/', AuthorListView.as_view(), name='authors'),
     path('authors/<int:pk>', AuthorDetailView.as_view(), name='author_detail'),
     path('review/<int:pk>', ReviewDeleteView.as_view(), name='review_delete'),
+    path('review/edit/<int:pk>', ReviewEditView.as_view(), name='review_edit'),
 ]
