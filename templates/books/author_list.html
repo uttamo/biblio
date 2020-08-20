@@ -5,7 +5,7 @@
     <h1>All Authors</h1>
     <ul class="list-group">
         {% for author in authors %}
-            <li class="list-group-item"><a href="{{ author.get_absolute_url }}">{{ author.full_name }}</a></li>
+            <li class="list-group-item"><a href="{{ author.get_absolute_url }}">{{ author.full_name }}</a><span class="badge badge-light border ml-1">{{ author.books.count }} book{{ author.books.count|pluralize }}</span></li>
         {% endfor %}
     </ul>
     <!-- Pagination -->

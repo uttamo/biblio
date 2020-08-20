@@ -9,6 +9,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 class ReviewInline(admin.TabularInline):
     model = Review
+    extra = 1
 
 
 class BookAdmin(admin.ModelAdmin):

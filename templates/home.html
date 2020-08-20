@@ -2,5 +2,6 @@
 
 {% block title %}Home{% endblock title %}
 {% block content %}
-    <h1>📚 Bienvenue 📚</h1>
+    <h1>📚 Welcome to Biblio</h1>
+    <h2><small class="text-muted">The current time is {{ current_time|date:"P" }} on {{ current_time|date:"jS F Y" }}.</small></h2>
 {% endblock content %}
