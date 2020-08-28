@@ -64,15 +64,12 @@ class Book(models.Model):
 
         if no_of_reviews == 0:
             average_rating = None
-            star_rating_text = 'No reviews'
         else:
             average_rating = round(total / no_of_reviews, 1)
-            star_rating_text = '★ {}'.format(average_rating)
 
         info = {
             'no_of_reviews': no_of_reviews,
             'avg_rating': average_rating,
-            'star_rating_text': star_rating_text,
         }
         return info
 

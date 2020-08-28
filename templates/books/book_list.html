@@ -40,7 +40,7 @@
                                     {% if book_rating_info.no_of_reviews == 0 %}
                                         No ratings
                                     {% else %}
-                                        {{ book_rating_info.star_rating_text }}
+                                        <span style="color: #ED8936">★</span> {{ book_rating_info.avg_rating }}
                                     {% endif %}
                                 {% endwith %}
                             </p>
