@@ -3,7 +3,21 @@
 
 {% block title %}All Books (page {{ page_obj.number }}){% endblock title %}
 {% block content %}
-    <h1>All Books</h1>
+    <div class="d-flex">
+        <div class="mr-auto p-2"><h1 class="mb-0">All Books</h1></div>
+        <div class="btn-group pt-3 pb-3" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort by
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <a href="{% url 'books' %}?sort=title_asc" class="dropdown-item">Title (ascending)</a>
+                <a href="{% url 'books' %}?sort=title_desc" class="dropdown-item">Title (descending)</a>
+                <div class="dropdown-divider"></div>
+                <a href="{% url 'books' %}?sort=author_asc" class="dropdown-item">Author (ascending)</a>
+                <a href="{% url 'books' %}?sort=author_desc" class="dropdown-item">Author (descending)</a>
+            </div>
+        </div>
+    </div>
     <ul class="list-group">
         {% for book in books %}
             <li class="list-group-item">

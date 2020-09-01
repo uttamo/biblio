@@ -18,11 +18,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 
+from .views import HomepageView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('users.urls')),
-    path('', include('books.urls'))
+    path('', HomepageView.as_view(), name='home'),
+    path('', include('books.urls')),
 ]
 
 # For serving media files

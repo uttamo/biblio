@@ -2,10 +2,22 @@
 
 {% block title %}All Authors (page {{ page_obj.number }}){% endblock title %}
 {% block content %}
-    <h1>All Authors</h1>
+    <div class="d-flex">
+        <div class="mr-auto p-2"><h1 class="mb-0">All Authors</h1></div>
+        <div class="btn-group pt-3 pb-3" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort by
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <a href="{% url 'authors' %}?sort=name_asc" class="dropdown-item">Ascending</a>
+                <a href="{% url 'authors' %}?sort=name_desc" class="dropdown-item">Descending</a>
+            </div>
+        </div>
+    </div>
+
     <ul class="list-group">
         {% for author in authors %}
-            <li class="list-group-item"><a href="{{ author.get_absolute_url }}">{{ author.full_name }}</a><span class="badge badge-light border ml-1">{{ author.books.count }} book{{ author.books.count|pluralize }}</span></li>
+            <li class="list-group-item"><a href="{{ author.get_absolute_url }}">{{ author.full_name }}</a><span class="badge badge-light border ml-1">{% with book_count=author.books.count %}{{ book_count }} book{{ book_count|pluralize }}{% endwith %}</span></li>
         {% endfor %}
     </ul>
     <!-- Pagination -->

@@ -1,11 +1,10 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from books.views import HomepageView, BookListView, BookDetailView, AuthorListView, AuthorDetailView, SearchResultsView, \
+from books.views import BookListView, BookDetailView, AuthorListView, AuthorDetailView, SearchResultsView, \
     ReviewDeleteView, ReviewEditView
 
 urlpatterns = [
-    path('', HomepageView.as_view(), name='home'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('search/', SearchResultsView.as_view(), name='search_results'),
     path('books/', BookListView.as_view(), name='books'),
