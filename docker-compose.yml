@@ -4,10 +4,6 @@ services:
   web:
     image: biblio-app
     build: .
-    environment:
-      - ENVIRONMENT=development
-      - DEBUG=1
-#    command: gunicorn biblioproject.wsgi -b 0.0.0.0:8000
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
@@ -17,9 +13,5 @@ services:
       - db
   db:
     image: postgres
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     volumes:
       - ./postgres-data:/var/lib/postgresql/data

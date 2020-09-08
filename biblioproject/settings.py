@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import os.path
+import json
+
+# Load the config
+config_filepath = os.getenv('CONFIG_FILEPATH', 'config/local.json')
+with open(config_filepath, 'r') as config_file:
+    config = json.load(config_file)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,10 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1tlde5e+e9t+r_9637%t%u&e8n13(a9j9rcbwm!ktpkb%ojoi5'
+SECRET_KEY = config['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.get('debug', False) is True
 
 ALLOWED_HOSTS = []
 
@@ -79,14 +87,15 @@ WSGI_APPLICATION = 'biblioproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+config_db = config.get('db', {})
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': config_db.get('name', 'postgres'),
+        'USER': config_db.get('user', 'postgres'),
+        'PASSWORD': config_db.get('password', 'postgres'),
+        'HOST': config_db.get('password', 'db'),
+        'PORT': config_db.get('port', 5432),
     }
 }
 
