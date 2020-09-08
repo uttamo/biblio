@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': config_db.get('name', 'postgres'),
         'USER': config_db.get('user', 'postgres'),
         'PASSWORD': config_db.get('password', 'postgres'),
-        'HOST': config_db.get('password', 'db'),
+        'HOST': config_db.get('host', 'db'),
         'PORT': config_db.get('port', 5432),
     }
 }

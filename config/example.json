@@ -1,0 +1,11 @@
+{
+  "secret_key": "secret-key-here",
+  "debug": true,
+  "db": {
+    "name": "postgres",
+    "user": "postgres",
+    "password": "postgres",
+    "host": "db",
+    "port": 5432
+  }
+}
