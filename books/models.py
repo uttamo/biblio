@@ -5,7 +5,7 @@ from uuid import uuid4
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, Avg
 from django.urls import reverse_lazy
 
 
@@ -60,12 +60,9 @@ class Book(models.Model):
     def get_rating_info(self) -> dict:
         reviews: Iterable[Review] = self.review_set.all()
         no_of_reviews = len(reviews)
-        total = sum(r.rating for r in reviews)
-
-        if no_of_reviews == 0:
-            average_rating = None
-        else:
-            average_rating = round(total / no_of_reviews, 1)
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        if average_rating is not None:
+            average_rating = round(average_rating, 1)
 
         info = {
             'no_of_reviews': no_of_reviews,
