@@ -1,9 +1,13 @@
 from django.contrib import admin
 
-from .models import Book, Author, Review
+from .models import Book, Author, Review, Tag
 
 
 class ReviewAdmin(admin.ModelAdmin):
+    pass
+
+
+class TagAdmin(admin.ModelAdmin):
     pass
 
 
@@ -26,3 +30,4 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Book, BookAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Review, ReviewAdmin)
+admin.site.register(Tag, TagAdmin)

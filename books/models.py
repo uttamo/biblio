@@ -58,7 +58,7 @@ class Book(models.Model):
         return reverse_lazy('book_detail', args=[str(self.pk)])
 
     def get_rating_info(self) -> dict:
-        reviews: Iterable[Review] = self.review_set.all()
+        reviews: Iterable[Review] = self.reviews.all()
         no_of_reviews = len(reviews)
         average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
         if average_rating is not None:
@@ -73,7 +73,7 @@ class Book(models.Model):
 
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveSmallIntegerField(blank=False, validators=[MinValueValidator(0), MaxValueValidator(10)])
     text = models.TextField(max_length=1000, blank=True, null=True)
 
@@ -82,3 +82,24 @@ class Review(models.Model):
 
     def __str__(self):
         return f'<Review {self.pk} (by {self.user}) for {self.book} ({self.rating}/10)>'
+
+
+class Tag(models.Model):
+    TO_READ = 'to_read'
+    READ = 'read'
+    CURRENTLY_READING = 'currently_reading'
+    TAG_CHOICES = [
+        (TO_READ, 'To read'),
+        (READ, 'Read'),
+        (CURRENTLY_READING, 'Currently reading'),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='tags')
+    tag = models.CharField(max_length=17, choices=TAG_CHOICES)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=['user', 'book'], name='unique tag per user per book')]
+
+    def __str__(self):
+        return f'Tag {self.pk} ("{self.tag}" by {self.user} for {self.book}'
